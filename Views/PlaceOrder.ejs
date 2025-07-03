@@ -1,0 +1,78 @@
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<form action="/makeOrder" method="post">
+    Products:
+    <select name="ProdId" id="ProdId" onChange="findDetails(this.value)">
+        <option value="" hidden>-----Select The Product-----</option>
+        <% products.forEach(element => { %>
+         <option value="<%=element._id  %>"><%=element.ProdName %></option>
+        <% }) %>
+    </select>
+    <br>
+    Product Rate:
+    <input type="text" name="ProdRate" id="ProdRate" readonly>
+    <br>
+    <input type="text" name="ProdQty" id="ProdQty" hidden>
+    Order Quantity:
+    <input type="text" name="OrderQty" id="OrderQty">
+    <br>
+    Order Value:
+    <input type="text" name="OrderValue" id="OrderValue">
+    <br>
+    <input type="submit" name="btn" id="btn" value="Place Order">
+</form>
+<table border="1px solid black" width="100%">
+    <tr>
+        <th>Sl No</th>
+        <th>Order Id</th>
+        <th>Product Name</th>
+        <th>Order Date</th>
+        <th>Product Rate</th>
+        <th>Order Quantity</th>
+        <th>Order Value</th>
+        <th>Action</th>
+    </tr>
+    <% orders.forEach((element,index) => { %>
+     <tr>
+        <td><%=index+1  %></td>
+        <td><%=element._id  %></td>
+        <td><%=element.ProdId.ProdName  %></td>
+        <td><%=element.OrderDate  %></td>
+        <td><%=element.ProdRate  %></td>
+        <td><%=element.OrderQty  %></td>
+        <td><%=element.OrderValue  %></td>
+        <td>
+            <button>Edit</button>
+            <button>Delete</button>
+        </td>
+     </tr>
+    <% }) %>
+</table>
+<script>
+    function findDetails(id){
+        $.ajax({
+            type:'get',
+            url:`/fetchProduct/${id}`,
+            dataType:'json',
+            success:function(res){
+                console.log(res);
+                $('#ProdRate').val(res.ProdRate);
+                $('#ProdQty').val(res.ProdQty);
+            }
+        })
+    }
+    $(document).ready(function(){
+        $('#OrderQty').keyup(function(){
+            let orderQty=parseInt($('#OrderQty').val());
+            const prodQty=parseInt($('#ProdQty').val());
+            const prodRate=parseInt($('#ProdRate').val());
+            if(orderQty>prodQty){
+                alert('Limit Exceed');
+                $('#OrderQty').val('');
+                $('#OrderValue').val('');
+            }else{
+                OrderValue=prodRate*orderQty;
+                $('#OrderValue').val(OrderValue);
+            }
+        })
+    })
+</script>
