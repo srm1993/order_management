@@ -5,7 +5,7 @@ const path=require('path');
 const router=require('./Routes/route');
 app.use(express.urlencoded({extended:false}));
 const port=8000
-mongoose.connect('mongodb+srv://soumyaseeree:kadali90@cluster0.mg0xti8.mongodb.net/order_master?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect('mongodb+srv://soumyaseeree:kadali90@cluster0.mg0xti8.mongodb.net/order_master')
 .then(()=>{
     console.log('MongoDb Connected Successfully');
 }).catch(err=>console.log(err))
